@@ -1,0 +1,64 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" 
+                access="global" 
+                controller="AccountWeatherCompController">
+    
+    <aura:handler name="init" value="{!this}" action="{!c.myInit}"/>
+    <aura:attribute name="weatherData" type="Object"/>    
+    <aura:attribute name="accountId" type="Id" default="{!v.recordId}"/>
+    
+    <lightning:card title="{!v.weatherData.name + ' Weather'}"> 
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-2 ">
+                <div class="slds-clearfix">
+                    <div class="slds-float_right slds-p-right_large">
+                        <p>Pressure</p>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <p>{!v.weatherData.main.pressure}</p>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-2 ">
+                <div class="slds-clearfix">
+                    <div class="slds-float_right slds-p-right_large">
+                        <p>Humidity</p>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <p>{!v.weatherData.main.humidity}</p>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-2 ">
+                <div class="slds-clearfix">
+                    <div class="slds-float_right slds-p-right_large">
+                        <p>Min Temp</p>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <p>{!v.weatherData.main.temp_min}</p>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-2 ">
+                <div class="slds-clearfix">
+                    <div class="slds-float_right slds-p-right_large">
+                        <p>Max Temp</p>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <p>{!v.weatherData.main.temp_max}</p>
+            </div>
+        </div>        
+    </lightning:card>
+    
+</aura:component>
