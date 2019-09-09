@@ -1,34 +1,35 @@
 trigger countContactsOnAccount on Contact(after insert, after update, after delete, after undelete){
   
-   List<Contact> contacts = new List<Contact>();
-   contacts = (Trigger.isAfter || Trigger.isDelete) ? Trigger.old : Trigger.new;
-    if(Trigger.isUpdate){
-        contacts.add(Trigger.old);
+  Set<Id> accountIds = new Set<Id>();
+
+  if (Trigger.isInsert) { // Insert
+    for(Contact c : Trigger.New) {
+        accountIds.add(c.AccountId);
+    }
+  } else if (Trigger.isDelete) { // Delete
+    for(Contact c : Trigger.old) {
+        accountIds.add(c.AccountId);
+    }
+  } else if (Trigger.isUpdate){  //Update 
+    for(Contact c : Trigger.New) {
+        if(Trigger.oldMap.get(c.Id).AccountId != c.AccountId) {
+            accountIds.add(c.AccountId);
+            accountIds.add(Trigger.oldMap.get(c.Id).AccountId);
+        }
+    }
+  }
+   if(accountIds.contains(null)) { accountIds.remove(null);} 
+
+    List<Account> accList = new List<Account>();
+    for (AggregateResult aggr : [SELECT AccountId AcctId, Count(id) ContactCount 
+                               FROM Contact 
+                               WHERE AccountId in: accountIds 
+                               GROUP BY AccountId]){
+        Account acc = new Account();
+        acc.Id = (Id) aggr.get('AcctId');
+        acc.ContactCount__c = (Integer) aggr.get('ContactCount');
+        accList.add(acc);
     }
 
-
-   Set<Id> accountIds = new Set<Id>();
-
-   for(Contact c : contacts){
-       if(c.AccountId != null){
-           accountIds.add(c.AccountId);
-       }
-   }
-   
-    List<Account> accountsToUpdate = new List<Account>(); 
-
-   AggregateResult[] ar = [SELECT AccountId accId, COUNT(id) ContactCount  
-                            FROM Contact 
-                            WHERE AccountId IN :accountIds
-                            GROUP BY AccountId ]; 
-
-    for(AggregateResult result : ar){
-        Account a = new Account();
-        a.Id = (Id)result.get('accId');
-        a.ContactCount__c = (integer)result.get('ContactCount');
-        system.debug((integer)result.get('ContactCount'));
-        accountsToUpdate.add(a);
-    }
-
-    update accountsToUpdate;
+    update accList;
 }
