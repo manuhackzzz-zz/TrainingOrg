@@ -22,6 +22,7 @@ trigger countContactsOnAccount on Contact(after insert, after update, after dele
         Account a = new Account();
         a.Id = (Id)result.get('accId');
         a.ContactCount__c = (integer)result.get('ContactCount');
+        system.debug((integer)result.get('ContactCount'));
         accountsToUpdate.add(a);
     }
 
