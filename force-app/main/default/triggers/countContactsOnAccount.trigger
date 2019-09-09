@@ -1,7 +1,11 @@
 trigger countContactsOnAccount on Contact(after insert, after update, after delete, after undelete){
   
    List<Contact> contacts = new List<Contact>();
-   contacts = (Trigger.isAfter && Trigger.isDelete) ? Trigger.old : Trigger.new;
+   contacts = (Trigger.isAfter || Trigger.isDelete) ? Trigger.old : Trigger.new;
+    if(Trigger.isUpdate){
+        contacts.add(Trigger.old);
+    }
+
 
    Set<Id> accountIds = new Set<Id>();
 
