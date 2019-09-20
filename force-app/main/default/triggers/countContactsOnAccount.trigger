@@ -1,3 +1,5 @@
+// Trigger to update contact count on Account record's ContactCount__c field
+
 trigger countContactsOnAccount on Contact(after insert, after update, after delete, after undelete){
   
   Set<Id> accountIds = new Set<Id>();
@@ -17,7 +19,12 @@ trigger countContactsOnAccount on Contact(after insert, after update, after dele
             accountIds.add(Trigger.oldMap.get(c.Id).AccountId);
         }
     }
+  } else if (Trigger.isUndelete) { // Undelete
+    for(Contact c : Trigger.New) {
+        accountIds.add(c.AccountId);
+    }
   }
+
    if(accountIds.contains(null)) { accountIds.remove(null);} 
 
     List<Account> accList = new List<Account>();
