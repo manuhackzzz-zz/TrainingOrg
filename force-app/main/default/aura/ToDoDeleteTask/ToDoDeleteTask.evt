@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="This event will delete a task">
+    <aura:attribute name="arrayIndex" type="Integer" />
+</aura:event>

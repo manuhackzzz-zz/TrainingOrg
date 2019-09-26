@@ -1,0 +1,4 @@
+<aura:component implements="lightning:isUrlAddressable">
+    <lightning:button variant="brand" label="Create Components" onclick="{! c.handleComponent }" />
+    {!v.body}
+</aura:component>

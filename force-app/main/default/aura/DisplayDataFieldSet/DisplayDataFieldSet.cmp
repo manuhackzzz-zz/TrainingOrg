@@ -1,0 +1,61 @@
+<!-- DisplayDataFieldSet.cmp -->
+<aura:component controller="DisplayRecordsController" 
+                implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                access="global" >
+    <!-- inputs from design -->
+    <aura:attribute name="sObjectName" type="String"/>
+    <aura:attribute name="fieldSetName" type="String"/>
+    
+    <aura:attribute name="fieldSetValues" type="List"/>  <!-- for Table Head  -->
+    <aura:attribute name="tableRecords" type="List"/>  <!-- for Table Records -->
+    <aura:attribute name="tableRecordsBackup" type="List" /> <!-- for Table Records backup -->
+    <!-- <aura:attribute name="sObject" type="sObject[]"/> -->
+    <aura:attribute name="page" type="integer" default="1"/> <!-- current page -->
+    <aura:attribute name="pages" type="integer" default="0"/> <!-- total number of pages -->
+    <aura:attribute name="total" type="integer" default="0"/> <!-- total number of records -->
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> <!-- Initial Load (Auto Load upon first run) -->
+    
+    <!-- everything in the table (including table inputs) -->
+    <div class="slds">
+        <table class="slds-table slds-table--bordered">
+            <thead>
+                <div class="slds-align_absolute-center">            
+                    <p class="slds-page-header__title slds-truncate">{!v.total}&nbsp;{!v.sObjectName} Records • Page {!v.page}/{!v.pages}</p>                    
+                </div>
+                <br/>
+                <ui:inputSelect aura:id="recordSize" label="  Display Records Per Page: " change="{!c.onSelectChange}"> <!-- Per page records input -->
+                    <ui:inputSelectOption text="0" label="0" value="true"/>
+                    <ui:inputSelectOption text="10" label="10"/>
+                    <ui:inputSelectOption text="15" label="15"/>
+                    <ui:inputSelectOption text="20" label="20"/>
+                    <ui:inputSelectOption text="25" label="25"/>
+                </ui:inputSelect>
+                <br/>
+                <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous Page" onclick="{! c.navigate }" />            
+                <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage" variant="brand" label="Next Page" onclick="{! c.navigate }" />
+                
+                <p></p>
+                <!-- dynamic table generation -->
+                <tr>
+                    <aura:iteration items="{!v.fieldSetValues}" var="field"> <!-- Iterate of Teable Head content storedin fieldSetValues -->
+                        <th> {!field.label}</th>
+                    </aura:iteration>
+                </tr>
+                
+            </thead>
+            <!-- dynamic table generation (Body Data)-->
+            <tbody>
+                <aura:iteration items="{!v.tableRecords}" var="row"> <!-- Iterate over each list element ie <tr> -->
+                    <tr>                        
+                        <aura:iteration items="{!v.fieldSetValues}" var="field"> <!-- Iterate over each Record for Field value ie <td> -->
+                            <td>
+                                <c:LightningCell record="{!row}" field="{!field}"/> <!-- Formatted value using LightningCell.cmp -->
+                            </td>
+                        </aura:iteration>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </div>
+</aura:component>

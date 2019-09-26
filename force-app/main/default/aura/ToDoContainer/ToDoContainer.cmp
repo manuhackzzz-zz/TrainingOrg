@@ -1,0 +1,8 @@
+<aura:component>
+    <aura:handler event="c:ToDoDeleteTask" action="{!c.handleDeleteTask}"/>
+    <aura:handler event="c:ToDoCreateTask" action="{!c.handleCreateTask}"/>
+    <aura:attribute name="tasks" type="String[]"/>
+    <div class="slds-text-heading_large">ToDo App</div>
+    <c:ToDoCreateTaskContainer/>
+    <c:ToDoTaskContainer taskList="{!v.tasks}"/>
+</aura:component>

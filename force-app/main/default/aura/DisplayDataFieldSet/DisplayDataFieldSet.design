@@ -1,0 +1,4 @@
+<design:component>
+    <design:attribute name="sObjectName" label="Object Name" />
+    <design:attribute name="fieldSetName" label="FieldSet Name"/>
+</design:component>
